@@ -2387,7 +2387,7 @@ function Section:CreateColorpicker(options)
                 options = options or {}
                 local name = options.Name or "Keybind"
                 local flag = options.Flag or ""
-                local default = options.Default or Enum.KeyCode.None
+                local default = options.Default
                 local callback = options.Callback or function() end
 
                 local Keybind = {}
@@ -2461,7 +2461,7 @@ function Section:CreateColorpicker(options)
                     if listening then
                         if input.UserInputType == Enum.UserInputType.Keyboard then
                             if input.KeyCode == Enum.KeyCode.Escape then
-                                Keybind.Value = Enum.KeyCode.None
+                                Keybind.Value = 'None'
                                 KeybindButton.Text = "None"
                             elseif input.KeyCode ~= Enum.KeyCode.Unknown then
                                 Keybind.Value = input.KeyCode
@@ -2475,7 +2475,7 @@ function Section:CreateColorpicker(options)
                             KeybindFrame.BackgroundColor3 = Colors.ElementBg
                             listening = false
                         end
-                    elseif not gameProcessed and input.KeyCode == Keybind.Value and Keybind.Value ~= Enum.KeyCode.None then
+                    elseif not gameProcessed and input.KeyCode == Keybind.Value then
                         callback()
                     end
                 end)
@@ -2483,7 +2483,7 @@ function Section:CreateColorpicker(options)
                 function Keybind:Set(key)
                     if typeof(key) == "EnumItem" then
                         Keybind.Value = key
-                        KeybindButton.Text = key == Enum.KeyCode.None and "None" or key.Name
+                        KeybindButton.Text = typeof(key) == 'string' and "None" or key.Name
                         
                         if flag ~= "" then
                             ConfigSystem:SetValue(flag, key)

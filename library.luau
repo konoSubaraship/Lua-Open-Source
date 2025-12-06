@@ -2461,7 +2461,7 @@ function Section:CreateColorpicker(options)
                     if listening then
                         if input.UserInputType == Enum.UserInputType.Keyboard then
                             if input.KeyCode == Enum.KeyCode.Escape then
-                                Keybind.Value = 'None'
+                                Keybind.Value = nil
                                 KeybindButton.Text = "None"
                             elseif input.KeyCode ~= Enum.KeyCode.Unknown then
                                 Keybind.Value = input.KeyCode

@@ -557,6 +557,7 @@ function Library:CreateWindow(options)
     ControlsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
     ControlsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ControlsLayout.Padding = UDim.new(0, 5)
+    ControlsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ControlsLayout.Parent = ControlsContainer
 
     local CloseButton = Instance.new("TextButton")

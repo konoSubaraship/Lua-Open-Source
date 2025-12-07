@@ -559,35 +559,6 @@ function Library:CreateWindow(options)
     ControlsLayout.Padding = UDim.new(0, 5)
     ControlsLayout.Parent = ControlsContainer
 
-    local MinimizeButton = Instance.new("TextButton")
-    MinimizeButton.Name = "Minimize"
-    MinimizeButton.Size = UDim2.new(0, 28, 0, 28)
-    MinimizeButton.BackgroundColor3 = Colors.Secondary
-    MinimizeButton.BorderSizePixel = 0
-    MinimizeButton.Text = ""
-    MinimizeButton.AutoButtonColor = false
-    MinimizeButton.Parent = ControlsContainer
-
-    AddCorner(MinimizeButton, 6)
-    AddStroke(MinimizeButton, Colors.Border, 1)
-
-    local MinimizeIcon = CreateIcon("minus", MinimizeButton)
-    if MinimizeIcon then
-        MinimizeIcon.Size = UDim2.new(0, 14, 0, 14)
-        MinimizeIcon.Position = UDim2.new(0.5, -7, 0.5, -7)
-        MinimizeIcon.ImageColor3 = Colors.TextDark
-    end
-
-    MinimizeButton.MouseEnter:Connect(function()
-        Tween(MinimizeButton, {BackgroundColor3 = Colors.ElementHover}, 0.15)
-        if MinimizeIcon then MinimizeIcon.ImageColor3 = Colors.Text end
-    end)
-
-    MinimizeButton.MouseLeave:Connect(function()
-        Tween(MinimizeButton, {BackgroundColor3 = Colors.Secondary}, 0.15)
-        if MinimizeIcon then MinimizeIcon.ImageColor3 = Colors.TextDark end
-    end)
-
     local CloseButton = Instance.new("TextButton")
     CloseButton.Name = "Close"
     CloseButton.Size = UDim2.new(0, 28, 0, 28)
@@ -621,6 +592,35 @@ function Library:CreateWindow(options)
         Tween(MainFrame, {Size = UDim2.new(0, MainFrame.Size.X.Offset, 0, 0)}, 0.3)
         task.wait(0.3)
         ScreenGui:Destroy()
+    end)
+
+    local MinimizeButton = Instance.new("TextButton")
+    MinimizeButton.Name = "Minimize"
+    MinimizeButton.Size = UDim2.new(0, 28, 0, 28)
+    MinimizeButton.BackgroundColor3 = Colors.Secondary
+    MinimizeButton.BorderSizePixel = 0
+    MinimizeButton.Text = ""
+    MinimizeButton.AutoButtonColor = false
+    MinimizeButton.Parent = ControlsContainer
+
+    AddCorner(MinimizeButton, 6)
+    AddStroke(MinimizeButton, Colors.Border, 1)
+
+    local MinimizeIcon = CreateIcon("minus", MinimizeButton)
+    if MinimizeIcon then
+        MinimizeIcon.Size = UDim2.new(0, 14, 0, 14)
+        MinimizeIcon.Position = UDim2.new(0.5, -7, 0.5, -7)
+        MinimizeIcon.ImageColor3 = Colors.TextDark
+    end
+
+    MinimizeButton.MouseEnter:Connect(function()
+        Tween(MinimizeButton, {BackgroundColor3 = Colors.ElementHover}, 0.15)
+        if MinimizeIcon then MinimizeIcon.ImageColor3 = Colors.Text end
+    end)
+
+    MinimizeButton.MouseLeave:Connect(function()
+        Tween(MinimizeButton, {BackgroundColor3 = Colors.Secondary}, 0.15)
+        if MinimizeIcon then MinimizeIcon.ImageColor3 = Colors.TextDark end
     end)
 
     local ResizeHandle = Instance.new("TextButton")

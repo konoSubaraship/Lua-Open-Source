@@ -1,4 +1,3 @@
--- CS:GO Style UI Library - Enhanced Version
 local Library = {}
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
@@ -6,17 +5,14 @@ local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 
--- Load Lucide Icons
 local LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/master/lib/Icons.luau"))()
 
--- Create ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "CSGOStyleUI"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = game.CoreGui
 
--- Notification System
 local NotificationHolder = Instance.new("Frame")
 NotificationHolder.Name = "NotificationHolder"
 NotificationHolder.Size = UDim2.new(0, 300, 1, -20)
@@ -30,12 +26,11 @@ NotificationLayout.Padding = UDim.new(0, 8)
 NotificationLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 NotificationLayout.Parent = NotificationHolder
 
--- Config System
 local ConfigSystem = {
     Flags = {},
     Elements = {},
-    ConfigFolder = "CSGOCheat",
-    CurrentSlot = "Slot1"
+    ConfigFolder = "Isreal",
+    CurrentConfig = "default"
 }
 
 function ConfigSystem:SetValue(flag, value)
@@ -55,10 +50,9 @@ function ConfigSystem:RegisterElement(flag, element)
 end
 
 function ConfigSystem:SaveConfig(slotName)
-    slotName = slotName or self.CurrentSlot
+    slotName = slotName or self.CurrentConfig
     
     local configData = {}
-    
     for flag, value in pairs(self.Flags) do
         if typeof(value) == "Color3" then
             configData[flag] = {
@@ -99,7 +93,7 @@ function ConfigSystem:SaveConfig(slotName)
 end
 
 function ConfigSystem:LoadConfig(slotName)
-    slotName = slotName or self.CurrentSlot
+    slotName = slotName or self.CurrentConfig
     
     if readfile then
         local folderPath = self.ConfigFolder
@@ -161,7 +155,7 @@ function ConfigSystem:GetConfigList()
     end
     
     if #configs == 0 then
-        configs = {"Slot1", "Slot2", "Slot3", "Slot4", "Slot5"}
+        configs = {}
     end
     
     return configs
@@ -180,7 +174,6 @@ end
 
 Library.ConfigSystem = ConfigSystem
 
--- Utility Functions
 local function Tween(object, properties, duration)
     local tweenInfo = TweenInfo.new(duration or 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = TweenService:Create(object, tweenInfo, properties)
@@ -308,33 +301,31 @@ local function MakeResizable(frame, handle, window)
     end)
 end
 
--- Enhanced Color Scheme (Gray/Dark theme)
 local Colors = {
-	Background = Color3.fromRGB(35, 35, 38),
-	BackgroundDark = Color3.fromRGB(28, 28, 30),
-	BackgroundDarker = Color3.fromRGB(22, 22, 24),
-	Secondary = Color3.fromRGB(30, 30, 32),
-	Tertiary = Color3.fromRGB(40, 40, 43),
-	Border = Color3.fromRGB(60, 60, 63),
-	BorderLight = Color3.fromRGB(70, 70, 73),
-	Accent = Color3.fromRGB(173, 173, 173),
-	AccentHover = Color3.fromRGB(203, 203, 203),
-	AccentDark = Color3.fromRGB(88, 88, 88),
-	Text = Color3.fromRGB(245, 245, 250),
-	TextDark = Color3.fromRGB(180, 180, 185),
-	TextMuted = Color3.fromRGB(140, 140, 145),
-	Toggle = Color3.fromRGB(106, 106, 106),
-	ToggleOff = Color3.fromRGB(50, 50, 53),
-	Header = Color3.fromRGB(25, 25, 27),
-	ElementBg = Color3.fromRGB(32, 32, 35),
-	ElementHover = Color3.fromRGB(42, 42, 45),
-	Success = Color3.fromRGB(70, 200, 85),
-	Warning = Color3.fromRGB(255, 176, 45),
-	Danger = Color3.fromRGB(240, 63, 79),
-	Divider = Color3.fromRGB(55, 55, 60),
+    Background = Color3.fromRGB(35, 35, 38),
+    BackgroundDark = Color3.fromRGB(28, 28, 30),
+    BackgroundDarker = Color3.fromRGB(22, 22, 24),
+    Secondary = Color3.fromRGB(30, 30, 32),
+    Tertiary = Color3.fromRGB(40, 40, 43),
+    Border = Color3.fromRGB(60, 60, 63),
+    BorderLight = Color3.fromRGB(70, 70, 73),
+    Accent = Color3.fromRGB(173, 173, 173),
+    AccentHover = Color3.fromRGB(203, 203, 203),
+    AccentDark = Color3.fromRGB(88, 88, 88),
+    Text = Color3.fromRGB(245, 245, 250),
+    TextDark = Color3.fromRGB(180, 180, 185),
+    TextMuted = Color3.fromRGB(140, 140, 145),
+    Toggle = Color3.fromRGB(106, 106, 106),
+    ToggleOff = Color3.fromRGB(50, 50, 53),
+    Header = Color3.fromRGB(25, 25, 27),
+    ElementBg = Color3.fromRGB(32, 32, 35),
+    ElementHover = Color3.fromRGB(42, 42, 45),
+    Success = Color3.fromRGB(70, 200, 85),
+    Warning = Color3.fromRGB(255, 176, 45),
+    Danger = Color3.fromRGB(240, 63, 79),
+    Divider = Color3.fromRGB(55, 55, 60),
 }
 
--- Available Fonts
 local Fonts = {
     {Name = "Roboto", Font = Enum.Font.Roboto},
     {Name = "Roboto Mono", Font = Enum.Font.RobotoMono},
@@ -345,9 +336,8 @@ local Fonts = {
 
 local CurrentFont = Enum.Font.RobotoMono
 local CurrentFontSize = 14
-local TabTextSize = 14 -- Fixed tab text size
+local TabTextSize = 14
 
--- Notification Function
 function Library:Notify(options)
     options = options or {}
     local title = options.Title or "Notification"
@@ -359,8 +349,11 @@ function Library:Notify(options)
                       Colors.Accent
 
     local Notification = Instance.new("Frame")
+    Notification.Name = "Notification"
     Notification.Size = UDim2.new(1, 0, 0, 0)
+    Notification.Position = UDim2.new(1, 0, 0, 0)
     Notification.BackgroundColor3 = Colors.BackgroundDark
+    Notification.BackgroundTransparency = 1
     Notification.BorderSizePixel = 0
     Notification.ClipsDescendants = true
     Notification.Parent = NotificationHolder
@@ -369,12 +362,19 @@ function Library:Notify(options)
     local NotifStroke = AddStroke(Notification, type_color, 2)
 
     local NotifAccent = Instance.new("Frame")
+    NotifAccent.Name = "Accent"
     NotifAccent.Size = UDim2.new(0, 4, 1, 0)
     NotifAccent.BackgroundColor3 = type_color
+    NotifAccent.BackgroundTransparency = 1
     NotifAccent.BorderSizePixel = 0
     NotifAccent.Parent = Notification
 
+    local AccentCorner = Instance.new("UICorner")
+    AccentCorner.CornerRadius = UDim.new(0, 6)
+    AccentCorner.Parent = NotifAccent
+
     local NotifContent = Instance.new("Frame")
+    NotifContent.Name = "Content"
     NotifContent.Size = UDim2.new(1, -14, 1, -16)
     NotifContent.Position = UDim2.new(0, 14, 0, 8)
     NotifContent.BackgroundTransparency = 1
@@ -386,11 +386,13 @@ function Library:Notify(options)
     NotifLayout.Parent = NotifContent
 
     local NotifTitle = Instance.new("TextLabel")
-    NotifTitle.Size = UDim2.new(1, 0, 0, 0)
+    NotifTitle.Name = "Title"
+    NotifTitle.Size = UDim2.new(1, -10, 0, 0)
     NotifTitle.AutomaticSize = Enum.AutomaticSize.Y
     NotifTitle.BackgroundTransparency = 1
     NotifTitle.Text = title
     NotifTitle.TextColor3 = type_color
+    NotifTitle.TextTransparency = 1
     NotifTitle.Font = CurrentFont
     NotifTitle.TextSize = CurrentFontSize + 1
     NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -399,11 +401,13 @@ function Library:Notify(options)
     NotifTitle.Parent = NotifContent
 
     local NotifDesc = Instance.new("TextLabel")
-    NotifDesc.Size = UDim2.new(1, 0, 0, 0)
+    NotifDesc.Name = "Description"
+    NotifDesc.Size = UDim2.new(1, -10, 0, 0)
     NotifDesc.AutomaticSize = Enum.AutomaticSize.Y
     NotifDesc.BackgroundTransparency = 1
     NotifDesc.Text = description
     NotifDesc.TextColor3 = Colors.TextDark
+    NotifDesc.TextTransparency = 1
     NotifDesc.Font = CurrentFont
     NotifDesc.TextSize = CurrentFontSize
     NotifDesc.TextXAlignment = Enum.TextXAlignment.Left
@@ -411,18 +415,41 @@ function Library:Notify(options)
     NotifDesc.LayoutOrder = 2
     NotifDesc.Parent = NotifContent
 
-    -- Calculate height
+    local ProgressBar = Instance.new("Frame")
+    ProgressBar.Name = "ProgressBar"
+    ProgressBar.Size = UDim2.new(1, 0, 0, 3)
+    ProgressBar.Position = UDim2.new(0, 0, 1, -3)
+    ProgressBar.BackgroundColor3 = Colors.BackgroundDarker
+    ProgressBar.BorderSizePixel = 0
+    ProgressBar.Parent = Notification
+
+    local ProgressFill = Instance.new("Frame")
+    ProgressFill.Name = "Fill"
+    ProgressFill.Size = UDim2.new(1, 0, 1, 0)
+    ProgressFill.BackgroundColor3 = type_color
+    ProgressFill.BorderSizePixel = 0
+    ProgressFill.Parent = ProgressBar
+
+    AddCorner(ProgressFill, 2)
+
     task.wait()
-    local contentHeight = NotifLayout.AbsoluteContentSize.Y + 16
-    Notification.Size = UDim2.new(1, 0, 0, contentHeight)
+    local contentHeight = NotifLayout.AbsoluteContentSize.Y + 24
 
-    -- Animate in
-    Notification.Position = UDim2.new(0, 310, 0, 0)
+    Tween(Notification, {Size = UDim2.new(1, 0, 0, contentHeight), BackgroundTransparency = 0}, 0.3)
     Tween(Notification, {Position = UDim2.new(0, 0, 0, 0)}, 0.3)
+    Tween(NotifAccent, {BackgroundTransparency = 0}, 0.3)
+    Tween(NotifTitle, {TextTransparency = 0}, 0.3)
+    Tween(NotifDesc, {TextTransparency = 0}, 0.3)
 
-    -- Auto remove
-    task.delay(duration, function()
-        Tween(Notification, {Position = UDim2.new(0, 310, 0, 0)}, 0.3)
+    task.delay(0.3, function()
+        Tween(ProgressFill, {Size = UDim2.new(0, 0, 1, 0)}, duration)
+    end)
+
+    task.delay(duration + 0.3, function()
+        Tween(Notification, {Position = UDim2.new(1, 0, 0, 0), BackgroundTransparency = 1}, 0.3)
+        Tween(NotifAccent, {BackgroundTransparency = 1}, 0.3)
+        Tween(NotifTitle, {TextTransparency = 1}, 0.3)
+        Tween(NotifDesc, {TextTransparency = 1}, 0.3)
         task.wait(0.3)
         Notification:Destroy()
     end)
@@ -433,6 +460,9 @@ function Library:CreateWindow(options)
     local windowName = options.Name or "CHEAT MENU"
     local windowIcon = options.Icon or "layout-dashboard"
     local configFolder = options.ConfigFolder or "CSGOCheat"
+    if not isfolder(configFolder) then 
+        makefolder(configFolder)
+    end 
     
     ConfigSystem.ConfigFolder = configFolder
     
@@ -447,7 +477,6 @@ function Library:CreateWindow(options)
     Window.Flags = ConfigSystem.Flags
     Window.TabButtons = {}
 
-    -- Main Frame
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
     MainFrame.Size = UDim2.new(0, 700, 0, 420)
@@ -461,7 +490,6 @@ function Library:CreateWindow(options)
     AddCorner(MainFrame, 8)
     AddStroke(MainFrame, Colors.Border, 1)
 
-    -- Inner container
     local InnerContainer = Instance.new("Frame")
     InnerContainer.Name = "InnerContainer"
     InnerContainer.Size = UDim2.new(1, 0, 1, 0)
@@ -469,7 +497,8 @@ function Library:CreateWindow(options)
     InnerContainer.ClipsDescendants = true
     InnerContainer.Parent = MainFrame
 
-    -- Header
+    AddCorner(InnerContainer, 8)
+
     local Header = Instance.new("Frame")
     Header.Name = "Header"
     Header.Size = UDim2.new(1, 0, 0, 35)
@@ -477,21 +506,26 @@ function Library:CreateWindow(options)
     Header.BorderSizePixel = 0
     Header.Parent = InnerContainer
 
-    local HeaderBottom = Instance.new("Frame")
-    HeaderBottom.Size = UDim2.new(1, 0, 0, 10)
-    HeaderBottom.Position = UDim2.new(0, 0, 1, -10)
-    HeaderBottom.BackgroundColor3 = Colors.Header
-    HeaderBottom.BorderSizePixel = 0
-    HeaderBottom.Parent = Header
+    local HeaderCorner = Instance.new("UICorner")
+    HeaderCorner.CornerRadius = UDim.new(0, 8)
+    HeaderCorner.Parent = Header
+
+    local HeaderBottomCover = Instance.new("Frame")
+    HeaderBottomCover.Name = "BottomCover"
+    HeaderBottomCover.Size = UDim2.new(1, 0, 0, 10)
+    HeaderBottomCover.Position = UDim2.new(0, 0, 1, -10)
+    HeaderBottomCover.BackgroundColor3 = Colors.Header
+    HeaderBottomCover.BorderSizePixel = 0
+    HeaderBottomCover.Parent = Header
 
     local HeaderBorder = Instance.new("Frame")
+    HeaderBorder.Name = "Border"
     HeaderBorder.Size = UDim2.new(1, 0, 0, 1)
     HeaderBorder.Position = UDim2.new(0, 0, 1, 0)
     HeaderBorder.BackgroundColor3 = Colors.Border
     HeaderBorder.BorderSizePixel = 0
     HeaderBorder.Parent = Header
 
-    -- Window Icon
     local WindowIcon = CreateIcon(windowIcon, Header)
     if WindowIcon then
         WindowIcon.Position = UDim2.new(0, 12, 0.5, -8)
@@ -499,8 +533,8 @@ function Library:CreateWindow(options)
         table.insert(Window.AccentElements, {Type = "Icon", Element = WindowIcon})
     end
 
-    -- Title
     local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
     Title.Size = UDim2.new(0, 300, 1, 0)
     Title.Position = UDim2.new(0, WindowIcon and 34 or 12, 0, 0)
     Title.BackgroundTransparency = 1
@@ -511,8 +545,8 @@ function Library:CreateWindow(options)
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.Parent = Header
 
-    -- Control Buttons Container
     local ControlsContainer = Instance.new("Frame")
+    ControlsContainer.Name = "Controls"
     ControlsContainer.Size = UDim2.new(0, 65, 0, 28)
     ControlsContainer.Position = UDim2.new(1, -70, 0.5, -14)
     ControlsContainer.BackgroundTransparency = 1
@@ -525,8 +559,8 @@ function Library:CreateWindow(options)
     ControlsLayout.Padding = UDim.new(0, 5)
     ControlsLayout.Parent = ControlsContainer
 
-    -- Minimize Button
     local MinimizeButton = Instance.new("TextButton")
+    MinimizeButton.Name = "Minimize"
     MinimizeButton.Size = UDim2.new(0, 28, 0, 28)
     MinimizeButton.BackgroundColor3 = Colors.Secondary
     MinimizeButton.BorderSizePixel = 0
@@ -554,8 +588,8 @@ function Library:CreateWindow(options)
         if MinimizeIcon then MinimizeIcon.ImageColor3 = Colors.TextDark end
     end)
 
-    -- Close Button
     local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "Close"
     CloseButton.Size = UDim2.new(0, 28, 0, 28)
     CloseButton.BackgroundColor3 = Colors.Secondary
     CloseButton.BorderSizePixel = 0
@@ -589,8 +623,8 @@ function Library:CreateWindow(options)
         ScreenGui:Destroy()
     end)
 
-    -- Resize Handle
     local ResizeHandle = Instance.new("TextButton")
+    ResizeHandle.Name = "Resize"
     ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
     ResizeHandle.Position = UDim2.new(1, -20, 1, -20)
     ResizeHandle.BackgroundTransparency = 1
@@ -646,7 +680,6 @@ function Library:CreateWindow(options)
         end
     end)
 
-    -- Tab Container
     local TabContainer = Instance.new("Frame")
     TabContainer.Name = "TabContainer"
     TabContainer.Size = UDim2.new(1, 0, 0, 40)
@@ -656,6 +689,7 @@ function Library:CreateWindow(options)
     TabContainer.Parent = InnerContainer
 
     local TabBorder = Instance.new("Frame")
+    TabBorder.Name = "Border"
     TabBorder.Size = UDim2.new(1, 0, 0, 1)
     TabBorder.Position = UDim2.new(0, 0, 1, 0)
     TabBorder.BackgroundColor3 = Colors.Border
@@ -663,6 +697,7 @@ function Library:CreateWindow(options)
     TabBorder.Parent = TabContainer
 
     local TabList = Instance.new("ScrollingFrame")
+    TabList.Name = "TabList"
     TabList.Size = UDim2.new(1, -20, 1, -10)
     TabList.Position = UDim2.new(0, 10, 0, 5)
     TabList.BackgroundTransparency = 1
@@ -680,7 +715,6 @@ function Library:CreateWindow(options)
     TabLayout.Padding = UDim.new(0, 6)
     TabLayout.Parent = TabList
 
-    -- Content Container
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = "ContentContainer"
     ContentContainer.Size = UDim2.new(1, 0, 1, -75)
@@ -690,6 +724,10 @@ function Library:CreateWindow(options)
 
     MakeDraggable(MainFrame, Header)
     MakeResizable(MainFrame, ResizeHandle, Window)
+
+    function Window:Notify(options)
+        Library:Notify(options)
+    end
 
     function Window:UpdateFont(font)
         Window.Font = font
@@ -711,7 +749,7 @@ function Library:CreateWindow(options)
                 if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
                     if element.Name == "SectionLabel" then
                         element.TextSize = size + 2
-                    elseif element.Parent.Name ~= "TabList" then -- Don't change tab text size
+                    elseif element.Parent.Name ~= "TabList" then
                         element.TextSize = size
                     end
                 end
@@ -736,6 +774,7 @@ function Library:CreateWindow(options)
         
         if Window.CurrentTab then
             Window.CurrentTab.Button.BackgroundColor3 = color
+            Window.CurrentTab.Stroke.Color = Colors.AccentHover
         end
         
         for _, data in pairs(Window.AccentElements) do
@@ -750,6 +789,17 @@ function Library:CreateWindow(options)
                     data.Element.TextColor3 = color
                 elseif data.Type == "ScrollBar" then
                     data.Element.ScrollBarImageColor3 = color
+                elseif data.Type == "CheckboxBox" then
+                    if data.GetValue and data.GetValue() then
+                        data.Element.BackgroundColor3 = color
+                        if data.Stroke then
+                            data.Stroke.Color = color
+                        end
+                    end
+                elseif data.Type == "TabStroke" then
+                    if data.IsSelected and data.IsSelected() then
+                        data.Element.Color = Colors.AccentHover
+                    end
                 end
             end
         end
@@ -772,12 +822,17 @@ function Library:CreateWindow(options)
     end
 
     function Window:SetConfigSlot(slotName)
-        ConfigSystem.CurrentSlot = slotName
+        ConfigSystem.CurrentConfig = slotName
     end
 
     function Window:CreateTab(tabName, iconName)
         local Tab = {}
         Tab.Name = tabName
+
+        local TabButtonPadding = Instance.new("UIPadding")
+        TabButtonPadding.PaddingLeft = UDim.new(0, 2.5)
+        TabButtonPadding.PaddingRight = UDim.new(0, 0)
+        TabButtonPadding.Parent = TabList
 
         local TabButton = Instance.new("TextButton")
         TabButton.Name = tabName
@@ -792,10 +847,10 @@ function Library:CreateWindow(options)
         AddCorner(TabButton, 6)
         local TabStroke = AddStroke(TabButton, Colors.Border, 1)
 
-        local TabButtonPadding = Instance.new("UIPadding")
-        TabButtonPadding.PaddingLeft = UDim.new(0, 10)
-        TabButtonPadding.PaddingRight = UDim.new(0, 12)
-        TabButtonPadding.Parent = TabButton
+        local TabButtonPaddingInner = Instance.new("UIPadding")
+        TabButtonPaddingInner.PaddingLeft = UDim.new(0, 10)
+        TabButtonPaddingInner.PaddingRight = UDim.new(0, 12)
+        TabButtonPaddingInner.Parent = TabButton
 
         local TabButtonLayout = Instance.new("UIListLayout")
         TabButtonLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -815,6 +870,7 @@ function Library:CreateWindow(options)
         end
 
         local TabLabel = Instance.new("TextLabel")
+        TabLabel.Name = "Label"
         TabLabel.Size = UDim2.new(0, 0, 0, 28)
         TabLabel.AutomaticSize = Enum.AutomaticSize.X
         TabLabel.BackgroundTransparency = 1
@@ -887,6 +943,12 @@ function Library:CreateWindow(options)
         Tab.Stroke = TabStroke
         Tab.Content = TabContent
 
+        table.insert(Window.AccentElements, {
+            Type = "TabStroke", 
+            Element = TabStroke, 
+            IsSelected = function() return Window.CurrentTab == Tab end
+        })
+
         if #Window.Tabs == 0 then
             TabButton.BackgroundColor3 = Colors.Accent
             TabLabel.TextColor3 = Colors.Text
@@ -908,6 +970,7 @@ function Library:CreateWindow(options)
             Divider.Parent = TabContent
 
             local DividerLine = Instance.new("Frame")
+            DividerLine.Name = "Line"
             DividerLine.Size = UDim2.new(1, -20, 0, 1)
             DividerLine.Position = UDim2.new(0, 10, 0.5, 0)
             DividerLine.BackgroundColor3 = Colors.Divider
@@ -939,6 +1002,7 @@ function Library:CreateWindow(options)
             Divider.Parent = TabContent
 
             local LeftLine = Instance.new("Frame")
+            LeftLine.Name = "LeftLine"
             LeftLine.Size = UDim2.new(0.5, -50, 0, 1)
             LeftLine.Position = UDim2.new(0, 10, 0.5, 0)
             LeftLine.BackgroundColor3 = Colors.Divider
@@ -953,6 +1017,7 @@ function Library:CreateWindow(options)
             LeftGradient.Parent = LeftLine
 
             local RightLine = Instance.new("Frame")
+            RightLine.Name = "RightLine"
             RightLine.Size = UDim2.new(0.5, -50, 0, 1)
             RightLine.Position = UDim2.new(0.5, 40, 0.5, 0)
             RightLine.BackgroundColor3 = Colors.Divider
@@ -967,6 +1032,7 @@ function Library:CreateWindow(options)
             RightGradient.Parent = RightLine
 
             local DividerLabel = Instance.new("TextLabel")
+            DividerLabel.Name = "Label"
             DividerLabel.Size = UDim2.new(0, 80, 1, 0)
             DividerLabel.Position = UDim2.new(0.5, -40, 0, 0)
             DividerLabel.BackgroundTransparency = 1
@@ -1006,6 +1072,7 @@ function Library:CreateWindow(options)
             SectionHeader.Size = UDim2.new(1, 0, 0, 28)
             SectionHeader.BackgroundColor3 = Colors.BackgroundDarker
             SectionHeader.BorderSizePixel = 0
+            SectionHeader.ClipsDescendants = true
             SectionHeader.Parent = SectionFrame
 
             local SectionHeaderCorner = Instance.new("UICorner")
@@ -1013,6 +1080,7 @@ function Library:CreateWindow(options)
             SectionHeaderCorner.Parent = SectionHeader
 
             local HeaderBottom = Instance.new("Frame")
+            HeaderBottom.Name = "BottomCover"
             HeaderBottom.Size = UDim2.new(1, 0, 0, 10)
             HeaderBottom.Position = UDim2.new(0, 0, 1, -10)
             HeaderBottom.BackgroundColor3 = Colors.BackgroundDarker
@@ -1020,6 +1088,7 @@ function Library:CreateWindow(options)
             HeaderBottom.Parent = SectionHeader
 
             local HeaderBorder = Instance.new("Frame")
+            HeaderBorder.Name = "Border"
             HeaderBorder.Size = UDim2.new(1, 0, 0, 1)
             HeaderBorder.Position = UDim2.new(0, 0, 1, 0)
             HeaderBorder.BackgroundColor3 = Colors.Border
@@ -1072,6 +1141,7 @@ function Library:CreateWindow(options)
                 Divider.Parent = SectionContent
 
                 local DividerLine = Instance.new("Frame")
+                DividerLine.Name = "Line"
                 DividerLine.Size = UDim2.new(1, 0, 0, 1)
                 DividerLine.Position = UDim2.new(0, 0, 0.5, 0)
                 DividerLine.BackgroundColor3 = Colors.Border
@@ -1098,6 +1168,7 @@ function Library:CreateWindow(options)
                 end
 
                 local CheckboxFrame = Instance.new("Frame")
+                CheckboxFrame.Name = "Checkbox"
                 CheckboxFrame.Size = UDim2.new(1, 0, 0, 28)
                 CheckboxFrame.BackgroundColor3 = Colors.ElementBg
                 CheckboxFrame.BorderSizePixel = 0
@@ -1107,12 +1178,14 @@ function Library:CreateWindow(options)
                 AddStroke(CheckboxFrame, Colors.Border, 1)
 
                 local CheckboxButton = Instance.new("TextButton")
+                CheckboxButton.Name = "Button"
                 CheckboxButton.Size = UDim2.new(1, 0, 1, 0)
                 CheckboxButton.BackgroundTransparency = 1
                 CheckboxButton.Text = ""
                 CheckboxButton.Parent = CheckboxFrame
 
                 local CheckboxLabel = Instance.new("TextLabel")
+                CheckboxLabel.Name = "Label"
                 CheckboxLabel.Size = UDim2.new(1, -40, 1, 0)
                 CheckboxLabel.Position = UDim2.new(0, 10, 0, 0)
                 CheckboxLabel.BackgroundTransparency = 1
@@ -1124,6 +1197,7 @@ function Library:CreateWindow(options)
                 CheckboxLabel.Parent = CheckboxFrame
 
                 local CheckboxBox = Instance.new("Frame")
+                CheckboxBox.Name = "Box"
                 CheckboxBox.Size = UDim2.new(0, 18, 0, 18)
                 CheckboxBox.Position = UDim2.new(1, -28, 0.5, -9)
                 CheckboxBox.BackgroundColor3 = Colors.BackgroundDarker
@@ -1140,6 +1214,13 @@ function Library:CreateWindow(options)
                     CheckIcon.ImageColor3 = Colors.Text
                     CheckIcon.Visible = default
                 end
+
+                table.insert(Window.AccentElements, {
+                    Type = "CheckboxBox", 
+                    Element = CheckboxBox, 
+                    Stroke = BoxStroke,
+                    GetValue = function() return Checkbox.Value end
+                })
 
                 local function updateVisual()
                     if Checkbox.Value then
@@ -1199,6 +1280,7 @@ function Library:CreateWindow(options)
                 local callback = options.Callback or function() end
 
                 local ButtonFrame = Instance.new("Frame")
+                ButtonFrame.Name = "Button"
                 ButtonFrame.Size = UDim2.new(1, 0, 0, 28)
                 ButtonFrame.BackgroundColor3 = Colors.Accent
                 ButtonFrame.BorderSizePixel = 0
@@ -1209,6 +1291,7 @@ function Library:CreateWindow(options)
                 table.insert(Window.AccentElements, {Type = "Background", Element = ButtonFrame})
 
                 local Button = Instance.new("TextButton")
+                Button.Name = "Click"
                 Button.Size = UDim2.new(1, 0, 1, 0)
                 Button.BackgroundTransparency = 1
                 Button.Text = ""
@@ -1216,6 +1299,7 @@ function Library:CreateWindow(options)
                 Button.Parent = ButtonFrame
 
                 local ButtonContent = Instance.new("Frame")
+                ButtonContent.Name = "Content"
                 ButtonContent.Size = UDim2.new(1, 0, 1, 0)
                 ButtonContent.BackgroundTransparency = 1
                 ButtonContent.Parent = Button
@@ -1237,6 +1321,7 @@ function Library:CreateWindow(options)
                 end
 
                 local ButtonLabel = Instance.new("TextLabel")
+                ButtonLabel.Name = "Label"
                 ButtonLabel.Size = UDim2.new(0, 0, 0, 28)
                 ButtonLabel.AutomaticSize = Enum.AutomaticSize.X
                 ButtonLabel.BackgroundTransparency = 1
@@ -1286,6 +1371,7 @@ function Library:CreateWindow(options)
                 end
 
                 local SliderFrame = Instance.new("Frame")
+                SliderFrame.Name = "Slider"
                 SliderFrame.Size = UDim2.new(1, 0, 0, 38)
                 SliderFrame.BackgroundColor3 = Colors.ElementBg
                 SliderFrame.BorderSizePixel = 0
@@ -1295,6 +1381,7 @@ function Library:CreateWindow(options)
                 AddStroke(SliderFrame, Colors.Border, 1)
 
                 local SliderLabel = Instance.new("TextLabel")
+                SliderLabel.Name = "Label"
                 SliderLabel.Size = UDim2.new(0.6, 0, 0, 18)
                 SliderLabel.Position = UDim2.new(0, 10, 0, 4)
                 SliderLabel.BackgroundTransparency = 1
@@ -1306,6 +1393,7 @@ function Library:CreateWindow(options)
                 SliderLabel.Parent = SliderFrame
 
                 local SliderValue = Instance.new("TextLabel")
+                SliderValue.Name = "Value"
                 SliderValue.Size = UDim2.new(0.4, -10, 0, 18)
                 SliderValue.Position = UDim2.new(0.6, 0, 0, 4)
                 SliderValue.BackgroundTransparency = 1
@@ -1319,6 +1407,7 @@ function Library:CreateWindow(options)
                 table.insert(Window.AccentElements, {Type = "Text", Element = SliderValue})
 
                 local SliderBar = Instance.new("Frame")
+                SliderBar.Name = "Bar"
                 SliderBar.Size = UDim2.new(1, -20, 0, 6)
                 SliderBar.Position = UDim2.new(0, 10, 1, -14)
                 SliderBar.BackgroundColor3 = Colors.BackgroundDarker
@@ -1328,6 +1417,7 @@ function Library:CreateWindow(options)
                 AddCorner(SliderBar, 3)
 
                 local SliderFill = Instance.new("Frame")
+                SliderFill.Name = "Fill"
                 SliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
                 SliderFill.BackgroundColor3 = Colors.Accent
                 SliderFill.BorderSizePixel = 0
@@ -1338,6 +1428,7 @@ function Library:CreateWindow(options)
                 AddCorner(SliderFill, 3)
 
                 local SliderButton = Instance.new("TextButton")
+                SliderButton.Name = "Button"
                 SliderButton.Size = UDim2.new(1, 0, 1, 10)
                 SliderButton.Position = UDim2.new(0, 0, 0, -5)
                 SliderButton.BackgroundTransparency = 1
@@ -1407,7 +1498,7 @@ function Library:CreateWindow(options)
                 local items = options.Items or {}
                 local default = options.Default or (items[1] or "None")
                 local callback = options.Callback or function() end
-                local searchable = options.Search ~= false -- Default true
+                local searchable = options.Search ~= false
 
                 local Dropdown = {}
                 Dropdown.Value = default
@@ -1421,6 +1512,7 @@ function Library:CreateWindow(options)
                 end
 
                 local DropdownFrame = Instance.new("Frame")
+                DropdownFrame.Name = "Dropdown"
                 DropdownFrame.Size = UDim2.new(1, 0, 0, 28)
                 DropdownFrame.BackgroundTransparency = 1
                 DropdownFrame.ClipsDescendants = false
@@ -1428,6 +1520,7 @@ function Library:CreateWindow(options)
                 DropdownFrame.Parent = SectionContent
 
                 local DropdownButton = Instance.new("TextButton")
+                DropdownButton.Name = "Button"
                 DropdownButton.Size = UDim2.new(1, 0, 0, 28)
                 DropdownButton.BackgroundColor3 = Colors.ElementBg
                 DropdownButton.BorderSizePixel = 0
@@ -1441,6 +1534,7 @@ function Library:CreateWindow(options)
                 DropdownStroke.ZIndex = 6
 
                 local DropdownLabel = Instance.new("TextLabel")
+                DropdownLabel.Name = "Label"
                 DropdownLabel.Size = UDim2.new(0.5, -10, 1, 0)
                 DropdownLabel.Position = UDim2.new(0, 10, 0, 0)
                 DropdownLabel.BackgroundTransparency = 1
@@ -1453,6 +1547,7 @@ function Library:CreateWindow(options)
                 DropdownLabel.Parent = DropdownButton
 
                 local DropdownValue = Instance.new("TextLabel")
+                DropdownValue.Name = "Value"
                 DropdownValue.Size = UDim2.new(0.5, -30, 1, 0)
                 DropdownValue.Position = UDim2.new(0.5, 0, 0, 0)
                 DropdownValue.BackgroundTransparency = 1
@@ -1475,6 +1570,7 @@ function Library:CreateWindow(options)
                 end
 
                 local DropdownList = Instance.new("Frame")
+                DropdownList.Name = "List"
                 DropdownList.Size = UDim2.new(1, 0, 0, 0)
                 DropdownList.Position = UDim2.new(0, 0, 0, 30)
                 DropdownList.BackgroundColor3 = Colors.BackgroundDarker
@@ -1489,18 +1585,19 @@ function Library:CreateWindow(options)
                 ListStroke.ZIndex = 50
                 table.insert(Window.AccentElements, {Type = "Stroke", Element = ListStroke})
 
-                -- Search box (if enabled)
                 local SearchBox
                 local searchOffset = 0
                 if searchable then
                     searchOffset = 32
                     local SearchContainer = Instance.new("Frame")
+                    SearchContainer.Name = "SearchContainer"
                     SearchContainer.Size = UDim2.new(1, 0, 0, 28)
                     SearchContainer.BackgroundTransparency = 1
                     SearchContainer.ZIndex = 50
                     SearchContainer.Parent = DropdownList
 
                     SearchBox = Instance.new("TextBox")
+                    SearchBox.Name = "Search"
                     SearchBox.Size = UDim2.new(1, -8, 0, 22)
                     SearchBox.Position = UDim2.new(0, 4, 0, 3)
                     SearchBox.BackgroundColor3 = Colors.ElementBg
@@ -1520,6 +1617,7 @@ function Library:CreateWindow(options)
                     AddPadding(SearchBox, 6, 6, 0, 0)
 
                     local SearchDivider = Instance.new("Frame")
+                    SearchDivider.Name = "Divider"
                     SearchDivider.Size = UDim2.new(1, -8, 0, 1)
                     SearchDivider.Position = UDim2.new(0, 4, 1, 0)
                     SearchDivider.BackgroundColor3 = Colors.Border
@@ -1529,6 +1627,7 @@ function Library:CreateWindow(options)
                 end
 
                 local ListContainer = Instance.new("ScrollingFrame")
+                ListContainer.Name = "Container"
                 ListContainer.Size = UDim2.new(1, 0, 1, -searchOffset)
                 ListContainer.Position = UDim2.new(0, 0, 0, searchOffset)
                 ListContainer.BackgroundTransparency = 1
@@ -1605,6 +1704,7 @@ function Library:CreateWindow(options)
 
                     for _, item in pairs(Dropdown.Items) do
                         local ItemButton = Instance.new("TextButton")
+                        ItemButton.Name = "Item"
                         ItemButton.Size = UDim2.new(1, 0, 0, 24)
                         ItemButton.BackgroundColor3 = Colors.ElementBg
                         ItemButton.BorderSizePixel = 0
@@ -1620,7 +1720,7 @@ function Library:CreateWindow(options)
                         AddStroke(ItemButton, Colors.Border, 1)
 
                         ItemButton.MouseButton1Click:Connect(function()
-                            Dropdown.Value = item
+                                                    Dropdown.Value = item
                             DropdownValue.Text = item
                             Dropdown.Open = false
                             Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, 28)}, 0.2)
@@ -1713,6 +1813,7 @@ function Library:CreateWindow(options)
                 end
 
                 local DropdownFrame = Instance.new("Frame")
+                DropdownFrame.Name = "MultiDropdown"
                 DropdownFrame.Size = UDim2.new(1, 0, 0, 28)
                 DropdownFrame.BackgroundTransparency = 1
                 DropdownFrame.ClipsDescendants = false
@@ -1720,6 +1821,7 @@ function Library:CreateWindow(options)
                 DropdownFrame.Parent = SectionContent
 
                 local DropdownButton = Instance.new("TextButton")
+                DropdownButton.Name = "Button"
                 DropdownButton.Size = UDim2.new(1, 0, 0, 28)
                 DropdownButton.BackgroundColor3 = Colors.ElementBg
                 DropdownButton.BorderSizePixel = 0
@@ -1733,6 +1835,7 @@ function Library:CreateWindow(options)
                 DropdownStroke.ZIndex = 6
 
                 local DropdownLabel = Instance.new("TextLabel")
+                DropdownLabel.Name = "Label"
                 DropdownLabel.Size = UDim2.new(0.5, -10, 1, 0)
                 DropdownLabel.Position = UDim2.new(0, 10, 0, 0)
                 DropdownLabel.BackgroundTransparency = 1
@@ -1753,6 +1856,7 @@ function Library:CreateWindow(options)
                 end
 
                 local DropdownValue = Instance.new("TextLabel")
+                DropdownValue.Name = "Value"
                 DropdownValue.Size = UDim2.new(0.5, -30, 1, 0)
                 DropdownValue.Position = UDim2.new(0.5, 0, 0, 0)
                 DropdownValue.BackgroundTransparency = 1
@@ -1776,6 +1880,7 @@ function Library:CreateWindow(options)
                 end
 
                 local DropdownList = Instance.new("Frame")
+                DropdownList.Name = "List"
                 DropdownList.Size = UDim2.new(1, 0, 0, 0)
                 DropdownList.Position = UDim2.new(0, 0, 0, 30)
                 DropdownList.BackgroundColor3 = Colors.BackgroundDarker
@@ -1795,12 +1900,14 @@ function Library:CreateWindow(options)
                 if searchable then
                     searchOffset = 32
                     local SearchContainer = Instance.new("Frame")
+                    SearchContainer.Name = "SearchContainer"
                     SearchContainer.Size = UDim2.new(1, 0, 0, 28)
                     SearchContainer.BackgroundTransparency = 1
                     SearchContainer.ZIndex = 50
                     SearchContainer.Parent = DropdownList
 
                     SearchBox = Instance.new("TextBox")
+                    SearchBox.Name = "Search"
                     SearchBox.Size = UDim2.new(1, -8, 0, 22)
                     SearchBox.Position = UDim2.new(0, 4, 0, 3)
                     SearchBox.BackgroundColor3 = Colors.ElementBg
@@ -1820,6 +1927,7 @@ function Library:CreateWindow(options)
                     AddPadding(SearchBox, 6, 6, 0, 0)
 
                     local SearchDivider = Instance.new("Frame")
+                    SearchDivider.Name = "Divider"
                     SearchDivider.Size = UDim2.new(1, -8, 0, 1)
                     SearchDivider.Position = UDim2.new(0, 4, 1, 0)
                     SearchDivider.BackgroundColor3 = Colors.Border
@@ -1829,6 +1937,7 @@ function Library:CreateWindow(options)
                 end
 
                 local ListContainer = Instance.new("ScrollingFrame")
+                ListContainer.Name = "Container"
                 ListContainer.Size = UDim2.new(1, 0, 1, -searchOffset)
                 ListContainer.Position = UDim2.new(0, 0, 0, searchOffset)
                 ListContainer.BackgroundTransparency = 1
@@ -1916,6 +2025,7 @@ function Library:CreateWindow(options)
                         AddStroke(ItemFrame, Colors.Border, 1)
 
                         local ItemButton = Instance.new("TextButton")
+                        ItemButton.Name = "Button"
                         ItemButton.Size = UDim2.new(1, 0, 1, 0)
                         ItemButton.BackgroundTransparency = 1
                         ItemButton.Text = ""
@@ -1923,6 +2033,7 @@ function Library:CreateWindow(options)
                         ItemButton.Parent = ItemFrame
 
                         local ItemLabel = Instance.new("TextLabel")
+                        ItemLabel.Name = "Label"
                         ItemLabel.Size = UDim2.new(1, -30, 1, 0)
                         ItemLabel.Position = UDim2.new(0, 6, 0, 0)
                         ItemLabel.BackgroundTransparency = 1
@@ -1935,6 +2046,7 @@ function Library:CreateWindow(options)
                         ItemLabel.Parent = ItemFrame
 
                         local CheckBox = Instance.new("Frame")
+                        CheckBox.Name = "CheckBox"
                         CheckBox.Size = UDim2.new(0, 14, 0, 14)
                         CheckBox.Position = UDim2.new(1, -19, 0.5, -7)
                         CheckBox.BackgroundColor3 = Colors.BackgroundDarker
@@ -1968,6 +2080,13 @@ function Library:CreateWindow(options)
                             DropdownValue.Text = getSelectedText()
                         end
 
+                        table.insert(Window.AccentElements, {
+                            Type = "CheckboxBox",
+                            Element = CheckBox,
+                            Stroke = CheckStroke,
+                            GetValue = function() return MultiDropdown.Values[item] end
+                        })
+
                         updateCheck()
 
                         ItemButton.MouseButton1Click:Connect(function()
@@ -2000,7 +2119,7 @@ function Library:CreateWindow(options)
                         local searchText = SearchBox.Text:lower()
                         for _, child in pairs(ListContainer:GetChildren()) do
                             if child:IsA("Frame") and child.Name == "MultiItem" then
-                                local label = child:FindFirstChild("TextLabel")
+                                local label = child:FindFirstChild("Label")
                                 if label then
                                     if searchText == "" or label.Text:lower():find(searchText) then
                                         child.Visible = true
@@ -2033,9 +2152,7 @@ function Library:CreateWindow(options)
                 return MultiDropdown
             end
 
-            -- Continue in next message (colorpicker, keybind, textbox, label, paragraph)...
-
-function Section:CreateColorpicker(options)
+            function Section:CreateColorpicker(options)
                 options = options or {}
                 local name = options.Name or "Color"
                 local flag = options.Flag or ""
@@ -2052,6 +2169,7 @@ function Section:CreateColorpicker(options)
                 end
 
                 local ColorFrame = Instance.new("Frame")
+                ColorFrame.Name = "Colorpicker"
                 ColorFrame.Size = UDim2.new(1, 0, 0, 28)
                 ColorFrame.BackgroundColor3 = Colors.ElementBg
                 ColorFrame.BorderSizePixel = 0
@@ -2061,6 +2179,7 @@ function Section:CreateColorpicker(options)
                 AddStroke(ColorFrame, Colors.Border, 1)
 
                 local ColorLabel = Instance.new("TextLabel")
+                ColorLabel.Name = "Label"
                 ColorLabel.Size = UDim2.new(1, -50, 1, 0)
                 ColorLabel.Position = UDim2.new(0, 10, 0, 0)
                 ColorLabel.BackgroundTransparency = 1
@@ -2072,6 +2191,7 @@ function Section:CreateColorpicker(options)
                 ColorLabel.Parent = ColorFrame
 
                 local ColorDisplayBg = Instance.new("Frame")
+                ColorDisplayBg.Name = "DisplayBg"
                 ColorDisplayBg.Size = UDim2.new(0, 32, 0, 18)
                 ColorDisplayBg.Position = UDim2.new(1, -42, 0.5, -9)
                 ColorDisplayBg.BackgroundColor3 = Colors.BackgroundDarker
@@ -2082,6 +2202,7 @@ function Section:CreateColorpicker(options)
                 AddStroke(ColorDisplayBg, Colors.Border, 1)
 
                 local ColorDisplay = Instance.new("Frame")
+                ColorDisplay.Name = "Display"
                 ColorDisplay.Size = UDim2.new(1, -6, 1, -6)
                 ColorDisplay.Position = UDim2.new(0, 3, 0, 3)
                 ColorDisplay.BackgroundColor3 = default
@@ -2091,6 +2212,7 @@ function Section:CreateColorpicker(options)
                 AddCorner(ColorDisplay, 2)
 
                 local ColorButton = Instance.new("TextButton")
+                ColorButton.Name = "Button"
                 ColorButton.Size = UDim2.new(1, 0, 1, 0)
                 ColorButton.BackgroundTransparency = 1
                 ColorButton.Text = ""
@@ -2105,6 +2227,7 @@ function Section:CreateColorpicker(options)
                 end)
 
                 local PickerFrame = Instance.new("Frame")
+                PickerFrame.Name = "Picker"
                 PickerFrame.Size = UDim2.new(0, 220, 0, 260)
                 PickerFrame.BackgroundColor3 = Colors.Background
                 PickerFrame.BorderSizePixel = 0
@@ -2122,15 +2245,18 @@ function Section:CreateColorpicker(options)
                 end
 
                 local PickerHeader = Instance.new("Frame")
+                PickerHeader.Name = "Header"
                 PickerHeader.Size = UDim2.new(1, 0, 0, 28)
                 PickerHeader.BackgroundColor3 = Colors.Header
                 PickerHeader.BorderSizePixel = 0
                 PickerHeader.ZIndex = 100
+                PickerHeader.ClipsDescendants = true
                 PickerHeader.Parent = PickerFrame
 
                 AddCorner(PickerHeader, 8)
 
                 local PickerHeaderBottom = Instance.new("Frame")
+                PickerHeaderBottom.Name = "BottomCover"
                 PickerHeaderBottom.Size = UDim2.new(1, 0, 0, 10)
                 PickerHeaderBottom.Position = UDim2.new(0, 0, 1, -10)
                 PickerHeaderBottom.BackgroundColor3 = Colors.Header
@@ -2139,6 +2265,7 @@ function Section:CreateColorpicker(options)
                 PickerHeaderBottom.Parent = PickerHeader
 
                 local PickerTitle = Instance.new("TextLabel")
+                PickerTitle.Name = "Title"
                 PickerTitle.Size = UDim2.new(1, -20, 1, 0)
                 PickerTitle.Position = UDim2.new(0, 10, 0, 0)
                 PickerTitle.BackgroundTransparency = 1
@@ -2150,7 +2277,10 @@ function Section:CreateColorpicker(options)
                 PickerTitle.ZIndex = 100
                 PickerTitle.Parent = PickerHeader
 
+                table.insert(Window.AccentElements, {Type = "Text", Element = PickerTitle})
+
                 local PaletteFrame = Instance.new("Frame")
+                PaletteFrame.Name = "Palette"
                 PaletteFrame.Size = UDim2.new(1, -20, 0, 150)
                 PaletteFrame.Position = UDim2.new(0, 10, 0, 38)
                 PaletteFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
@@ -2161,6 +2291,7 @@ function Section:CreateColorpicker(options)
                 AddCorner(PaletteFrame, 6)
 
                 local SaturationOverlay = Instance.new("Frame")
+                SaturationOverlay.Name = "Saturation"
                 SaturationOverlay.Size = UDim2.new(1, 0, 1, 0)
                 SaturationOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 SaturationOverlay.BorderSizePixel = 0
@@ -2177,6 +2308,7 @@ function Section:CreateColorpicker(options)
                 AddCorner(SaturationOverlay, 6)
 
                 local BrightnessOverlay = Instance.new("Frame")
+                BrightnessOverlay.Name = "Brightness"
                 BrightnessOverlay.Size = UDim2.new(1, 0, 1, 0)
                 BrightnessOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                 BrightnessOverlay.BorderSizePixel = 0
@@ -2194,6 +2326,7 @@ function Section:CreateColorpicker(options)
                 AddCorner(BrightnessOverlay, 6)
 
                 local Selector = Instance.new("Frame")
+                Selector.Name = "Selector"
                 Selector.Size = UDim2.new(0, 12, 0, 12)
                 Selector.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 Selector.BorderSizePixel = 0
@@ -2204,6 +2337,7 @@ function Section:CreateColorpicker(options)
                 AddStroke(Selector, Color3.fromRGB(0, 0, 0), 2)
 
                 local HueSlider = Instance.new("Frame")
+                HueSlider.Name = "HueSlider"
                 HueSlider.Size = UDim2.new(1, -20, 0, 16)
                 HueSlider.Position = UDim2.new(0, 10, 0, 196)
                 HueSlider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2226,6 +2360,7 @@ function Section:CreateColorpicker(options)
                 HueGradient.Parent = HueSlider
 
                 local HueSelector = Instance.new("Frame")
+                HueSelector.Name = "Selector"
                 HueSelector.Size = UDim2.new(0, 6, 1, 4)
                 HueSelector.Position = UDim2.new(0, -3, 0, -2)
                 HueSelector.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2237,6 +2372,7 @@ function Section:CreateColorpicker(options)
                 AddStroke(HueSelector, Color3.fromRGB(0, 0, 0), 1)
 
                 local HueButton = Instance.new("TextButton")
+                HueButton.Name = "Button"
                 HueButton.Size = UDim2.new(1, 0, 1, 0)
                 HueButton.BackgroundTransparency = 1
                 HueButton.Text = ""
@@ -2326,6 +2462,7 @@ function Section:CreateColorpicker(options)
                 end)
 
                 local ClosePickerButton = Instance.new("TextButton")
+                ClosePickerButton.Name = "Close"
                 ClosePickerButton.Size = UDim2.new(1, -20, 0, 28)
                 ClosePickerButton.Position = UDim2.new(0, 10, 1, -38)
                 ClosePickerButton.BackgroundColor3 = Colors.Accent
@@ -2339,6 +2476,7 @@ function Section:CreateColorpicker(options)
                 ClosePickerButton.Parent = PickerFrame
 
                 AddCorner(ClosePickerButton, 6)
+                table.insert(Window.AccentElements, {Type = "Background", Element = ClosePickerButton})
 
                 ClosePickerButton.MouseButton1Click:Connect(function()
                     PickerFrame.Visible = false
@@ -2387,7 +2525,7 @@ function Section:CreateColorpicker(options)
                 options = options or {}
                 local name = options.Name or "Keybind"
                 local flag = options.Flag or ""
-                local default = options.Default
+                local default = options.Default or Enum.KeyCode.RightShift
                 local callback = options.Callback or function() end
 
                 local Keybind = {}
@@ -2400,6 +2538,7 @@ function Section:CreateColorpicker(options)
                 end
 
                 local KeybindFrame = Instance.new("Frame")
+                KeybindFrame.Name = "Keybind"
                 KeybindFrame.Size = UDim2.new(1, 0, 0, 28)
                 KeybindFrame.BackgroundColor3 = Colors.ElementBg
                 KeybindFrame.BorderSizePixel = 0
@@ -2409,6 +2548,7 @@ function Section:CreateColorpicker(options)
                 AddStroke(KeybindFrame, Colors.Border, 1)
 
                 local KeybindLabel = Instance.new("TextLabel")
+                KeybindLabel.Name = "Label"
                 KeybindLabel.Size = UDim2.new(1, -70, 1, 0)
                 KeybindLabel.Position = UDim2.new(0, 10, 0, 0)
                 KeybindLabel.BackgroundTransparency = 1
@@ -2420,11 +2560,12 @@ function Section:CreateColorpicker(options)
                 KeybindLabel.Parent = KeybindFrame
 
                 local KeybindButton = Instance.new("TextButton")
+                KeybindButton.Name = "Button"
                 KeybindButton.Size = UDim2.new(0, 55, 0, 18)
                 KeybindButton.Position = UDim2.new(1, -65, 0.5, -9)
                 KeybindButton.BackgroundColor3 = Colors.BackgroundDarker
                 KeybindButton.BorderSizePixel = 0
-                KeybindButton.Text = typeof(default) == 'string' and 'None' or default.Name
+                KeybindButton.Text = typeof(default) == "string" and "None" or default.Name
                 KeybindButton.TextColor3 = Colors.Accent
                 KeybindButton.Font = Window.Font
                 KeybindButton.TextSize = Window.FontSize - 1
@@ -2483,11 +2624,14 @@ function Section:CreateColorpicker(options)
                 function Keybind:Set(key)
                     if typeof(key) == "EnumItem" then
                         Keybind.Value = key
-                        KeybindButton.Text = typeof(key) == 'string' and "None" or key.Name
+                        KeybindButton.Text = key.Name
                         
                         if flag ~= "" then
                             ConfigSystem:SetValue(flag, key)
                         end
+                    elseif key == nil then
+                        Keybind.Value = nil
+                        KeybindButton.Text = "None"
                     end
                 end
 
@@ -2516,6 +2660,7 @@ function Section:CreateColorpicker(options)
                 end
 
                 local TextboxFrame = Instance.new("Frame")
+                TextboxFrame.Name = "Textbox"
                 TextboxFrame.Size = UDim2.new(1, 0, 0, 28)
                 TextboxFrame.BackgroundColor3 = Colors.ElementBg
                 TextboxFrame.BorderSizePixel = 0
@@ -2525,6 +2670,7 @@ function Section:CreateColorpicker(options)
                 AddStroke(TextboxFrame, Colors.Border, 1)
 
                 local TextboxLabel = Instance.new("TextLabel")
+                TextboxLabel.Name = "Label"
                 TextboxLabel.Size = UDim2.new(0.4, 0, 1, 0)
                 TextboxLabel.Position = UDim2.new(0, 10, 0, 0)
                 TextboxLabel.BackgroundTransparency = 1
@@ -2536,6 +2682,7 @@ function Section:CreateColorpicker(options)
                 TextboxLabel.Parent = TextboxFrame
 
                 local TextboxInput = Instance.new("TextBox")
+                TextboxInput.Name = "Input"
                 TextboxInput.Size = UDim2.new(0.55, -10, 0, 18)
                 TextboxInput.Position = UDim2.new(0.45, 0, 0.5, -9)
                 TextboxInput.BackgroundColor3 = Colors.BackgroundDarker
@@ -2596,11 +2743,13 @@ function Section:CreateColorpicker(options)
 
             function Section:CreateLabel(text)
                 local LabelFrame = Instance.new("Frame")
+                LabelFrame.Name = "Label"
                 LabelFrame.Size = UDim2.new(1, 0, 0, 22)
                 LabelFrame.BackgroundTransparency = 1
                 LabelFrame.Parent = SectionContent
 
                 local Label = Instance.new("TextLabel")
+                Label.Name = "Text"
                 Label.Size = UDim2.new(1, 0, 1, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = text or "Label"
@@ -2625,6 +2774,7 @@ function Section:CreateColorpicker(options)
                 local content = options.Content or "Content"
 
                 local ParagraphFrame = Instance.new("Frame")
+                ParagraphFrame.Name = "Paragraph"
                 ParagraphFrame.Size = UDim2.new(1, 0, 0, 0)
                 ParagraphFrame.AutomaticSize = Enum.AutomaticSize.Y
                 ParagraphFrame.BackgroundColor3 = Colors.BackgroundDarker
@@ -2642,6 +2792,7 @@ function Section:CreateColorpicker(options)
                 AddPadding(ParagraphFrame, 10, 10, 8, 8)
 
                 local TitleLabel = Instance.new("TextLabel")
+                TitleLabel.Name = "Title"
                 TitleLabel.Size = UDim2.new(1, 0, 0, 0)
                 TitleLabel.AutomaticSize = Enum.AutomaticSize.Y
                 TitleLabel.BackgroundTransparency = 1
@@ -2657,6 +2808,7 @@ function Section:CreateColorpicker(options)
                 table.insert(Window.AccentElements, {Type = "Text", Element = TitleLabel})
 
                 local ContentLabel = Instance.new("TextLabel")
+                ContentLabel.Name = "Content"
                 ContentLabel.Size = UDim2.new(1, 0, 0, 0)
                 ContentLabel.AutomaticSize = Enum.AutomaticSize.Y
                 ContentLabel.BackgroundTransparency = 1
@@ -2712,7 +2864,7 @@ function Section:CreateColorpicker(options)
             Name = "Font",
             Flag = "ui_font",
             Items = fontNames,
-            Default = "Roboto",
+            Default = "Roboto Mono",
             Callback = function(selected)
                 for _, fontData in ipairs(Fonts) do
                     if fontData.Name == selected then
@@ -2743,11 +2895,11 @@ function Section:CreateColorpicker(options)
         local configSlotDropdown
         
         configSlotDropdown = ConfigSection:CreateDropdown({
-            Name = "Config Slot",
+            Name = "Selected Config",
             Items = ConfigSystem:GetConfigList(),
-            Default = "Slot1",
+            Default = nil,
             Callback = function(slot)
-                ConfigSystem.CurrentSlot = slot
+                ConfigSystem.CurrentConfig = slot
             end
         })
         
@@ -2756,7 +2908,7 @@ function Section:CreateColorpicker(options)
             Placeholder = "Config name...",
             Callback = function(text, enterPressed)
                 if enterPressed and text ~= "" then
-                    ConfigSystem.CurrentSlot = text
+                    ConfigSystem.CurrentConfig = text
                     local configs = ConfigSystem:GetConfigList()
                     if not table.find(configs, text) then
                         table.insert(configs, text)
@@ -2774,7 +2926,7 @@ function Section:CreateColorpicker(options)
             Icon = "save",
             Callback = function()
                 if Window:SaveConfig() then
-                    Library:Notify({
+                    Window:Notify({
                         Title = "Config Saved",
                         Description = "Configuration saved successfully!",
                         Type = "success",
@@ -2789,14 +2941,14 @@ function Section:CreateColorpicker(options)
             Icon = "folder-open",
             Callback = function()
                 if Window:LoadConfig() then
-                    Library:Notify({
+                    Window:Notify({
                         Title = "Config Loaded",
                         Description = "Configuration loaded successfully!",
                         Type = "success",
                         Duration = 3
                     })
                 else
-                    Library:Notify({
+                    Window:Notify({
                         Title = "Load Failed",
                         Description = "Could not load configuration",
                         Type = "error",
@@ -2810,8 +2962,8 @@ function Section:CreateColorpicker(options)
             Name = "Delete Config",
             Icon = "trash-2",
             Callback = function()
-                if Window:DeleteConfig(ConfigSystem.CurrentSlot) then
-                    Library:Notify({
+                if Window:DeleteConfig(ConfigSystem.CurrentConfig) then
+                    Window:Notify({
                         Title = "Config Deleted",
                         Description = "Configuration deleted!",
                         Type = "warning",
@@ -2852,4 +3004,3 @@ function Section:CreateColorpicker(options)
 end
 
 return Library
-

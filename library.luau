@@ -8,7 +8,7 @@ local Players = game:GetService("Players")
 local LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/master/lib/Icons.luau"))()
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "CSGOStyleUI"
+ScreenGui.Name = "Roblox"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = game.CoreGui

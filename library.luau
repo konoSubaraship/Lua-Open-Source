@@ -565,6 +565,7 @@ function Library:CreateWindow(options)
     CloseButton.BackgroundColor3 = Colors.Secondary
     CloseButton.BorderSizePixel = 0
     CloseButton.Text = ""
+    CloseButton.LayoutOrder = 10
     CloseButton.AutoButtonColor = false
     CloseButton.Parent = ControlsContainer
 

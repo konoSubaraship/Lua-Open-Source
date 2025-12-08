@@ -1272,6 +1272,8 @@ function Library:CreateWindow(options)
                     return Checkbox.Value
                 end
 
+                callback(options.Default)
+
                 return Checkbox
             end
 
@@ -1489,6 +1491,8 @@ function Library:CreateWindow(options)
                 function Slider:Get()
                     return Slider.Value
                 end
+
+                callback(options.Default)
 
                 return Slider
             end
@@ -1785,6 +1789,8 @@ function Library:CreateWindow(options)
                 function Dropdown:Get()
                     return Dropdown.Value
                 end
+
+                callback(options.Default)
 
                 Dropdown:Refresh()
                 return Dropdown
@@ -2149,6 +2155,8 @@ function Library:CreateWindow(options)
                 function MultiDropdown:Get()
                     return MultiDropdown.Values
                 end
+
+                callback(options.Default)
 
                 MultiDropdown:Refresh()
                 return MultiDropdown
@@ -2519,6 +2527,8 @@ function Library:CreateWindow(options)
                 function Colorpicker:Get()
                     return Colorpicker.Value
                 end
+
+                callback(options.Default)
 
                 return Colorpicker
             end
